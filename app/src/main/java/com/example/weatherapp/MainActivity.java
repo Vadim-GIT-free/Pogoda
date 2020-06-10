@@ -4,6 +4,7 @@ package com.example.weatherapp;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -42,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
     }
     private void showInputDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Change city");
+        builder.setTitle("Сменить город");
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
-        builder.setPositiveButton("Go", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Ок", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 changeCity(input.getText().toString());
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 .findFragmentById(R.id.container);
         wf.changeCity(city);
         new CityPreference(this).setCity(city);
+        Log.e("MainActivity", "City" + city);
     }
 
 }

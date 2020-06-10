@@ -11,14 +11,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class RemoteFetch {
-    private static final String OPEN_WEATHER_MAP_API =
-            "https://api.openweathermap.org/data/2.5/weather?q=Kiev&appid=0b9fb99e1dcf41d38825175d97f685e7&units=metric&lang=ru";
+    private static final String OPEN_WEATHER_MAP_API ="https://api.openweathermap.org/data/2.5/weather?q=";
+            //"https://api.openweathermap.org/data/2.5/weather?q=Kiev&appid=0b9fb99e1dcf41d38825175d97f685e7&units=metric&lang=ru";
+    private static final String API_METRIC ="&units=metric&lang=ru&appid=";
 
     public static JSONObject getJSON(Context context, String city) {
         try {
-            URL url = new URL(String.format(OPEN_WEATHER_MAP_API, city));
+            String urlString = OPEN_WEATHER_MAP_API + city + API_METRIC + context.getString(R.string.open_weather_maps_app_id);
+            URL urlObject = new URL(urlString);
             HttpURLConnection connection =
-                    (HttpURLConnection) url.openConnection();
+                    (HttpURLConnection) urlObject.openConnection();
 
             connection.addRequestProperty("YOUR_API_KEY",
                     context.getString(R.string.open_weather_maps_app_id));
