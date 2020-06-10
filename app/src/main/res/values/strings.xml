@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherAPP</string>
+    <string name="app_name">Погода</string>
     <string name="action_settings">Settings</string>
     <string name="change_city">Смена города</string>
 

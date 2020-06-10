@@ -34,7 +34,7 @@
         android:id="@+id/weather_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="85sp"
         app:layout_constraintEnd_toEndOf="parent"
