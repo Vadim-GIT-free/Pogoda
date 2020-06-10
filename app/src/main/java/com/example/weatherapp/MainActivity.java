@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
+        Log.e("MainActivity", "City" + builder.show());
     }
 
     public void changeCity(String city) {
