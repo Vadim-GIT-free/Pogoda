@@ -4,14 +4,13 @@ package com.example.weatherapp;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,15 +53,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
-        Log.e("MainActivity", "City" + builder.show());
     }
 
     public void changeCity(String city) {
         WeatherFragment wf = (WeatherFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.container);
+                .findFragmentById(R.id.conteiner2);
         wf.changeCity(city);
         new CityPreference(this).setCity(city);
-        Log.e("MainActivity", "City" + city);
     }
 
 }
