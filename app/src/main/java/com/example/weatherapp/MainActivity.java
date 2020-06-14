@@ -2,6 +2,7 @@ package com.example.weatherapp;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -12,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.change_city){
             showInputDialog();
         }
+        if(item.getItemId() == R.id.next_window){
+            Intent intent = new Intent(this,Refresh.class);
+            startActivity(intent);
+        }
         return false;
     }
     private void showInputDialog(){
@@ -61,5 +66,6 @@ public class MainActivity extends AppCompatActivity {
         wf.changeCity(city);
         new CityPreference(this).setCity(city);
     }
+
 
 }

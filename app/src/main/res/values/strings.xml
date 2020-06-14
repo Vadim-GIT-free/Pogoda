@@ -2,6 +2,7 @@
     <string name="app_name">Погода</string>
     <string name="action_settings">Settings</string>
     <string name="change_city">Смена города</string>
+    <string name="next_activity">Next</string>
 
     <string name="open_weather_maps_app_id">0b9fb99e1dcf41d38825175d97f685e7</string>
     <string name="weather_sunny">&#xf00d;</string>
@@ -12,5 +13,7 @@
     <string name="weather_snowy">&#xf01b;</string>
     <string name="weather_thunder">&#xf01e;</string>
     <string name="weather_drizzle">&#xf01c;</string>
+    <string name="refresh_started">Старт</string>
+    <string name="refresh_stop">Стоп</string>
     <string name="place_not_found">Информация не найдена.</string>
 </resources>
