@@ -1,6 +1,5 @@
 package com.example.weatherapp;
 
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,26 +7,43 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class MainActivity extends AppCompatActivity {
+
+public class RefreshActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, WeatherFragment.OnRefreshListener {
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private WeatherFragment mWeatherFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wather_activity);
-        Toolbar toolbar = findViewById(R.id.toolbar2);
-        setSupportActionBar(toolbar);
-
-
+        setContentView(R.layout.activity_weather);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorBlue, R.color.colorYellow,
+                R.color.colorGreen, R.color.colorRed);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.conteiner2, new WeatherFragment())
+                    .add(R.id.frame_two, new WeatherFragment())
                     .commit();
         }
+
+    }
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment fragment) {
+        if (fragment instanceof WeatherFragment) {
+            mWeatherFragment = (WeatherFragment) fragment;
+            mWeatherFragment.setOnRefreshListenet(this);
+        }
+        super.onAttachFragment(fragment);
     }
 
     @Override
@@ -41,15 +57,16 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.change_city) {
             showInputDialog();
         }
-        if (item.getItemId() == R.id.next_window) {
-            Intent intent = new Intent(this, RefreshActivity.class);
-            startActivity(intent);
-        }
         if (item.getItemId() == R.id.variant_activity) {
             Intent intent = new Intent(this, Fragment2.class);
             startActivity(intent);
         }
         return false;
+    }
+
+    @Override
+    public void onRefresh() {
+        mWeatherFragment.updateWeatherData();
     }
 
     private void showInputDialog() {
@@ -67,12 +84,21 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void changeCity(String city) {
+    private void changeCity(String city) {
         WeatherFragment wf = (WeatherFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.conteiner2);
+                .findFragmentById(R.id.frame_two);
         wf.changeCity(city);
         new CityPreference(this).setCity(city);
     }
 
+    @Override
+    public void onRefreshStarted() {
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
 
+    @Override
+    public void onRefreshComplete() {
+        Toast.makeText(RefreshActivity.this, R.string.refresh_stop, Toast.LENGTH_SHORT).show();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 }

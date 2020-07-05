@@ -13,8 +13,7 @@
     <string name="weather_snowy">&#xf01b;</string>
     <string name="weather_thunder">&#xf01e;</string>
     <string name="weather_drizzle">&#xf01c;</string>
-    <string name="refresh_started">Старт</string>
-    <string name="refresh_stop">Стоп</string>
+    <string name="refresh_stop">Обновление завершено</string>
     <string name="place_not_found">Информация не найдена.</string>
     <string name="variant_two">Вариант2</string>
 </resources>
