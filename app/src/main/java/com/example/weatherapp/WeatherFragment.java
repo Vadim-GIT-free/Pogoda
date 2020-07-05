@@ -1,6 +1,5 @@
 package com.example.weatherapp;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +20,10 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class WeatherFragment extends Fragment  {
+public class WeatherFragment extends Fragment {
+
+    private final static String TAG = "WeatherFragment";
+
     Typeface weatherFont;
     Button button;
     TextView cityField;
@@ -32,6 +34,9 @@ public class WeatherFragment extends Fragment  {
 
     Handler handler;
 
+
+    private OnRefreshListener mRefreshListener;
+    private String mSelectedCity;
 
 
     public WeatherFragment() {
@@ -48,20 +53,29 @@ public class WeatherFragment extends Fragment  {
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
         weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
-        updateWeatherData(new CityPreference(getActivity()).getCity());
         weatherIcon.setTypeface(weatherFont);
 
         return rootView;
-
     }
 
-    private void updateWeatherData(final String city){
-        new Thread(){
-            public void run(){
-                final JSONObject json = RemoteFetch.getJSON(getActivity(), city);
-                if(json == null){
-                    handler.post(new Runnable(){
-                        public void run(){
+    @Override
+    public void onResume() {
+        mSelectedCity = new CityPreference(getActivity()).getCity();
+        updateWeatherData();
+        super.onResume();
+    }
+
+    public void updateWeatherData() {
+        if (mRefreshListener != null) {
+            mRefreshListener.onRefreshStarted();
+        }
+
+        new Thread() {
+            public void run() {
+                final JSONObject json = RemoteFetch.getJSON(getActivity(), mSelectedCity);
+                if (json == null) {
+                    handler.post(new Runnable() {
+                        public void run() {
                             Toast.makeText(getActivity(),
                                     getActivity().getString(R.string.place_not_found),
                                     Toast.LENGTH_LONG).show();
@@ -71,14 +85,21 @@ public class WeatherFragment extends Fragment  {
                     handler.post(new Runnable() {
                         public void run() {
                             renderWeather(json);
+
+                            if (mRefreshListener != null) {
+                                mRefreshListener.onRefreshComplete();
+                            }
                         }
                     });
                 }
             }
         }.start();
     }
-    private void renderWeather(JSONObject json){
+
+    private void renderWeather(JSONObject json) {
         try {
+            Log.i(TAG, "Rendering weather...");
+
             cityField.setText(json.getString("name").toUpperCase(Locale.US) +
                     ", " +
                     json.getJSONObject("sys").getString("country"));
@@ -88,48 +109,55 @@ public class WeatherFragment extends Fragment  {
             detailsField.setText(
                     details.getString("description").toUpperCase(Locale.US) +
                             "\n" + "Влажность: " + main.getString("humidity") + "%" +
-                            "\n" + "АтДавление: " + main.getString("pressure") + " hPa"+
-                    "\n"+ "Min:"+main.getString("temp_min")+"℃"+"-"+"Max:"+main.getString("temp_max")+"℃");
+                            "\n" + "АтДавление: " + main.getString("pressure") + " hPa" +
+                            "\n" + "Min:" + main.getString("temp_min") + "℃" + "-" + "Max:" + main.getString("temp_max") + "℃");
 
             currentTemperatureField.setText(
-                    String.format("%.2f", main.getDouble("temp"))+ " ℃");
+                    String.format("%.2f", main.getDouble("temp")) + " ℃");
 
             DateFormat df = DateFormat.getDateInstance();
-            String updatedOn = df.format(new Date(json.getLong("dt")*1000));
+            String updatedOn = df.format(new Date(json.getLong("dt") * 1000));
             updatedField.setText("Последнее обновление: " + updatedOn);
 
             setWeatherIcon(details.getInt("id"),
                     json.getJSONObject("sys").getLong("sunrise") * 1000,
                     json.getJSONObject("sys").getLong("sunset") * 1000);
 
-        }catch(Exception e){
-            Log.e("SimpleWeather", "One or more fields not found in the JSON data");
+        } catch (Exception e) {
+            Log.e(TAG, "One or more fields not found in the JSON data");
         }
     }
-    private void setWeatherIcon(int actualId, long sunrise, long sunset){
+
+    private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
         String icon = "";
-        if(actualId == 800){
+        if (actualId == 800) {
             long currentTime;
             currentTime = new Date(id).getTime();
-            if(currentTime>=sunrise && currentTime<sunset) {
+            if (currentTime >= sunrise && currentTime < sunset) {
                 icon = getActivity().getString(R.string.weather_sunny);
             } else {
                 icon = getActivity().getString(R.string.weather_clear_night);
             }
         } else {
-            switch(id) {
-                case 2 : icon = getActivity().getString(R.string.weather_thunder);
+            switch (id) {
+                case 2:
+                    icon = getActivity().getString(R.string.weather_thunder);
                     break;
-                case 3 : icon = getActivity().getString(R.string.weather_drizzle);
+                case 3:
+                    icon = getActivity().getString(R.string.weather_drizzle);
                     break;
-                case 7 : icon = getActivity().getString(R.string.weather_foggy);
+                case 7:
+                    icon = getActivity().getString(R.string.weather_foggy);
                     break;
-                case 8 : icon = getActivity().getString(R.string.weather_cloudy);
+                case 8:
+                    icon = getActivity().getString(R.string.weather_cloudy);
                     break;
-                case 6 : icon = getActivity().getString(R.string.weather_snowy);
+                case 6:
+                    icon = getActivity().getString(R.string.weather_snowy);
                     break;
-                case 5 : icon = getActivity().getString(R.string.weather_rainy);
+                case 5:
+                    icon = getActivity().getString(R.string.weather_rainy);
                     break;
             }
         }
@@ -137,7 +165,17 @@ public class WeatherFragment extends Fragment  {
     }
 
     public void changeCity(String city) {
-        updateWeatherData(city);
+        mSelectedCity = city;
+        updateWeatherData();
+    }
 
+    public void setOnRefreshListenet(OnRefreshListener l) {
+        mRefreshListener = l;
+    }
+
+    public interface OnRefreshListener {
+        void onRefreshStarted();
+
+        void onRefreshComplete();
     }
 }
