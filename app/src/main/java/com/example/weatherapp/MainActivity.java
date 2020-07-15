@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RefreshActivity.class);
             startActivity(intent);
         }
-        if (item.getItemId() == R.id.variant_activity) {
-            Intent intent = new Intent(this, Fragment2.class);
-            startActivity(intent);
-        }
         return false;
     }
 

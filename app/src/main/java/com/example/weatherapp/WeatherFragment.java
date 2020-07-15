@@ -1,5 +1,6 @@
 package com.example.weatherapp;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,10 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
 import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
@@ -25,12 +27,17 @@ public class WeatherFragment extends Fragment {
     private final static String TAG = "WeatherFragment";
 
     Typeface weatherFont;
-    Button button;
     TextView cityField;
     TextView updatedField;
     TextView detailsField;
     TextView currentTemperatureField;
     TextView weatherIcon;
+    TextView sensation_temperature;
+    TextView mPressure;
+    TextView mHumidity;
+    TextView mSpeed;
+    TextView mDirection;
+    ImageView weather_icon_image;
 
     Handler handler;
 
@@ -52,8 +59,14 @@ public class WeatherFragment extends Fragment {
         detailsField = (TextView) rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
         weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
+        mPressure = (TextView) rootView.findViewById(R.id.text_impression);
+        mHumidity = (TextView) rootView.findViewById(R.id.text_humidity);
+        mSpeed = (TextView) rootView.findViewById(R.id.text_speed);
+        mDirection = (TextView) rootView.findViewById(R.id.text_direction);
+        weather_icon_image = (ImageView) rootView.findViewById(R.id.imageIcon);
+        sensation_temperature = (TextView) rootView.findViewById(R.id.sensation_temperature_field);
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
-        weatherIcon.setTypeface(weatherFont);
+       // weatherIcon.setTypeface(weatherFont);
 
         return rootView;
     }
@@ -108,12 +121,19 @@ public class WeatherFragment extends Fragment {
             JSONObject main = json.getJSONObject("main");
             detailsField.setText(
                     details.getString("description").toUpperCase(Locale.US) +
-                            "\n" + "Влажность: " + main.getString("humidity") + "%" +
-                            "\n" + "АтДавление: " + main.getString("pressure") + " hPa" +
-                            "\n" + "Min:" + main.getString("temp_min") + "℃" + "-" + "Max:" + main.getString("temp_max") + "℃");
+                            "\n" + "Min:" + (String.format("%.1f", main.getDouble("temp_min")) +
+                            "℃" + "-" + "Max:" +  main.getString("temp_max")) + "℃");
 
-            currentTemperatureField.setText(
-                    String.format("%.2f", main.getDouble("temp")) + " ℃");
+            mHumidity.setText(json.getJSONObject("main").getString("humidity") + "%");
+            mPressure.setText(json.getJSONObject("main").getString("pressure") + "hPa");
+            mSpeed.setText(json.getJSONObject("wind").getString("speed") + "М/С");
+
+            currentTemperatureField.setText(String.format("%.1f", main.getDouble("temp")) + " ℃");
+
+            sensation_temperature.setText(String.format("%.1f", main.getDouble("feels_like"))+ "℃");
+
+            setDirectionWind(json.getJSONObject("wind").getInt("deg"));
+
 
             DateFormat df = DateFormat.getDateInstance();
             String updatedOn = df.format(new Date(json.getLong("dt") * 1000));
@@ -128,40 +148,76 @@ public class WeatherFragment extends Fragment {
         }
     }
 
+    private void setDirectionWind(int anInt) {
+        String icon = "";
+        Log.e("TAG","Int" + anInt );
+        if (anInt >= 0 && anInt <= 23) {
+            icon = getActivity().getString(R.string.west);
+        }else {
+            if(anInt >= 24 && anInt <= 69){
+                icon = getActivity().getString(R.string.north_west);
+            }else {
+            if (anInt >= 70 && anInt <= 113){
+                icon = getActivity().getString(R.string.nord);
+            }else {
+                if(anInt >= 114 && anInt <= 159){
+                    icon = getActivity().getString(R.string.north_ist);
+                }else {
+                    if (anInt >=160 && anInt <= 204){
+                        icon = getActivity().getString(R.string.ist);
+                    }else {
+                        if(anInt >= 205 && anInt <= 249){
+                            icon = getActivity().getString(R.string.south_ist);
+                        }else {
+                            if(anInt >= 250 && anInt <= 293){
+                                icon = getActivity().getString(R.string.south);
+                            }else {
+                                if(anInt >= 294 && anInt <= 339){
+                                    icon = getActivity().getString(R.string.south_west);
+                                }else {
+                                if(anInt >= 340 && anInt <=360){
+                                    icon = getActivity().getString(R.string.west);
+                                }}}
+                    }}
+            }}}}
+        mDirection.setText(icon);
+        Log.e("TAG","text"+ icon);
+
+    }
+
     private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
-        String icon = "";
         if (actualId == 800) {
             long currentTime;
             currentTime = new Date(id).getTime();
             if (currentTime >= sunrise && currentTime < sunset) {
-                icon = getActivity().getString(R.string.weather_sunny);
+                weather_icon_image.setImageResource(R.drawable.sunny); // Солнечно
             } else {
-                icon = getActivity().getString(R.string.weather_clear_night);
+                weather_icon_image.setImageResource(R.drawable.luna);// Ясная ночь
             }
         } else {
             switch (id) {
                 case 2:
-                    icon = getActivity().getString(R.string.weather_thunder);
+                    weather_icon_image.setImageResource(R.drawable.thunder); // Гром
                     break;
                 case 3:
-                    icon = getActivity().getString(R.string.weather_drizzle);
+                    weather_icon_image.setImageResource(R.drawable.drizzle); // Морось
                     break;
                 case 7:
-                    icon = getActivity().getString(R.string.weather_foggy);
+                    weather_icon_image.setImageResource(R.drawable.foggy);// Туман
                     break;
                 case 8:
-                    icon = getActivity().getString(R.string.weather_cloudy);
+                    weather_icon_image.setImageResource(R.drawable.cloudy);// Пасмурно
                     break;
                 case 6:
-                    icon = getActivity().getString(R.string.weather_snowy);
+                    weather_icon_image.setImageResource(R.drawable.snowy_2); // Снег
                     break;
                 case 5:
-                    icon = getActivity().getString(R.string.weather_rainy);
+                    weather_icon_image.setImageResource(R.drawable.rainy);//Дождь
                     break;
             }
         }
-        weatherIcon.setText(icon);
+        weather_icon_image.setImageResource(id);
     }
 
     public void changeCity(String city) {

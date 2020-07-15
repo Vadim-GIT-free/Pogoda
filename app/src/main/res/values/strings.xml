@@ -2,7 +2,7 @@
     <string name="app_name">Погода</string>
     <string name="action_settings">Settings</string>
     <string name="change_city">Смена города</string>
-    <string name="next_activity">Next</string>
+    <string name="new_city">Другой город</string>
 
     <string name="open_weather_maps_app_id">0b9fb99e1dcf41d38825175d97f685e7</string>
     <string name="weather_sunny">&#xf00d;</string>
@@ -15,5 +15,13 @@
     <string name="weather_drizzle">&#xf01c;</string>
     <string name="refresh_stop">Обновление завершено</string>
     <string name="place_not_found">Информация не найдена.</string>
-    <string name="variant_two">Вариант2</string>
+    <string name="sensation_temperature">Ощущается</string>
+    <string name="west">ЗП</string>
+    <string name="nord">СВР</string>
+    <string name="ist">ВСТ</string>
+    <string name="south">ЮГ</string>
+    <string name="south_ist">ЮГ-ВСТ</string>
+    <string name="south_west">ЮГ-ЗП</string>
+    <string name="north_ist">СВР-ВСТ</string>
+    <string name="north_west">СВР-ЗП</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.weatherapp;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -25,6 +25,8 @@ public class RefreshActivity extends AppCompatActivity implements SwipeRefreshLa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorBlue, R.color.colorYellow,
@@ -48,18 +50,14 @@ public class RefreshActivity extends AppCompatActivity implements SwipeRefreshLa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.weather, menu);
+        getMenuInflater().inflate(R.menu.weather_city, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.change_city) {
+        if (item.getItemId() == R.id.city_city) {
             showInputDialog();
-        }
-        if (item.getItemId() == R.id.variant_activity) {
-            Intent intent = new Intent(this, Fragment2.class);
-            startActivity(intent);
         }
         return false;
     }

@@ -8,10 +8,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/next_window"
-        android:title="@string/next_activity"
+        android:title="@string/new_city"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/variant_activity"
-        android:title="@string/variant_two"
-        app:showAsAction="never" />
+
 </menu>
