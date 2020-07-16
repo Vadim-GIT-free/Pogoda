@@ -1,6 +1,5 @@
 package com.example.weatherapp;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.ComponentActivity;
 import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
@@ -20,6 +18,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 public class WeatherFragment extends Fragment {
@@ -38,6 +37,7 @@ public class WeatherFragment extends Fragment {
     TextView mSpeed;
     TextView mDirection;
     ImageView weather_icon_image;
+
 
     Handler handler;
 
@@ -126,7 +126,7 @@ public class WeatherFragment extends Fragment {
 
             mHumidity.setText(json.getJSONObject("main").getString("humidity") + "%");
             mPressure.setText(json.getJSONObject("main").getString("pressure") + "hPa");
-            mSpeed.setText(json.getJSONObject("wind").getString("speed") + "М/С");
+            mSpeed.setText(json.getJSONObject("wind").getString("speed") + "м/с");
 
             currentTemperatureField.setText(String.format("%.1f", main.getDouble("temp")) + " ℃");
 
@@ -135,11 +135,11 @@ public class WeatherFragment extends Fragment {
             setDirectionWind(json.getJSONObject("wind").getInt("deg"));
 
 
-            DateFormat df = DateFormat.getDateInstance();
+            DateFormat df = DateFormat.getInstance();
             String updatedOn = df.format(new Date(json.getLong("dt") * 1000));
-            updatedField.setText("Последнее обновление: " + updatedOn);
+            updatedField.setText("Обновлено: " + updatedOn);
 
-            setWeatherIcon(details.getInt("id"),
+            setWeatherIcon(details.getInt("id") ,
                     json.getJSONObject("sys").getLong("sunrise") * 1000,
                     json.getJSONObject("sys").getLong("sunset") * 1000);
 
@@ -150,7 +150,6 @@ public class WeatherFragment extends Fragment {
 
     private void setDirectionWind(int anInt) {
         String icon = "";
-        Log.e("TAG","Int" + anInt );
         if (anInt >= 0 && anInt <= 23) {
             icon = getActivity().getString(R.string.west);
         }else {
@@ -181,20 +180,13 @@ public class WeatherFragment extends Fragment {
                     }}
             }}}}
         mDirection.setText(icon);
-        Log.e("TAG","text"+ icon);
 
     }
 
     private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
         if (actualId == 800) {
-            long currentTime;
-            currentTime = new Date(id).getTime();
-            if (currentTime >= sunrise && currentTime < sunset) {
                 weather_icon_image.setImageResource(R.drawable.sunny); // Солнечно
-            } else {
-                weather_icon_image.setImageResource(R.drawable.luna);// Ясная ночь
-            }
         } else {
             switch (id) {
                 case 2:
