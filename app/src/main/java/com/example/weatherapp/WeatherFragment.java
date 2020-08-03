@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 public class WeatherFragment extends Fragment {
@@ -122,7 +121,7 @@ public class WeatherFragment extends Fragment {
             detailsField.setText(
                     details.getString("description").toUpperCase(Locale.US) +
                             "\n" + "Min:" + (String.format("%.1f", main.getDouble("temp_min")) +
-                            "℃" + "-" + "Max:" +  main.getString("temp_max")) + "℃");
+                            "℃" + "-" + "Max:" + (String.format("%.1f", main.getDouble("temp_max")))) + "℃");
 
             mHumidity.setText(json.getJSONObject("main").getString("humidity") + "%");
             mPressure.setText(json.getJSONObject("main").getString("pressure") + "hPa");
@@ -130,7 +129,7 @@ public class WeatherFragment extends Fragment {
 
             currentTemperatureField.setText(String.format("%.1f", main.getDouble("temp")) + " ℃");
 
-            sensation_temperature.setText(String.format("%.1f", main.getDouble("feels_like"))+ "℃");
+            sensation_temperature.setText(String.format("%.1f", main.getDouble("feels_like") + 4)+ "℃");
 
             setDirectionWind(json.getJSONObject("wind").getInt("deg"));
 
@@ -184,7 +183,7 @@ public class WeatherFragment extends Fragment {
     }
 
     private void setWeatherIcon(int actualId, long sunrise, long sunset) {
-        int id = actualId / 100;
+        int id = actualId / 100 ;
         if (actualId == 800) {
                 weather_icon_image.setImageResource(R.drawable.sunny); // Солнечно
         } else {
@@ -196,7 +195,7 @@ public class WeatherFragment extends Fragment {
                     weather_icon_image.setImageResource(R.drawable.drizzle); // Морось
                     break;
                 case 7:
-                    weather_icon_image.setImageResource(R.drawable.foggy);// Туман
+                    weather_icon_image.setImageResource(R.drawable.foggy3);// Туман
                     break;
                 case 8:
                     weather_icon_image.setImageResource(R.drawable.cloudy);// Пасмурно

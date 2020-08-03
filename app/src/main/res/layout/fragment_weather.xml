@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/updated_field"
-        app:srcCompat="@drawable/sunny" />
+        app:srcCompat="@drawable/fon" />
 
     <TextView
         android:id="@+id/current_temperature_field"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/colorBlue"
-        android:textSize="28sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -72,8 +72,8 @@
     <LinearLayout
         android:id="@+id/layout_sensation"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
         android:background="@color/color_fon_object"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -203,7 +203,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
-        android:text="TextView"
+        android:text="@string/soon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_sensation" />
