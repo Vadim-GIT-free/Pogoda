@@ -5,6 +5,7 @@
     <string name="new_city">Другой город</string>
 
     <string name="open_weather_maps_app_id">0b9fb99e1dcf41d38825175d97f685e7</string>
+    <string name="open_weather_maps_app_id1">d34c395ff65a1801048545217a2b294e</string>
     <string name="weather_sunny">&#xf00d;</string>
     <string name="weather_clear_night">&#xf02e;</string>
     <string name="weather_foggy">&#xf014;</string>
@@ -25,4 +26,6 @@
     <string name="north_ist">СВР-ВСТ</string>
     <string name="north_west">СВР-ЗП</string>
     <string name="soon">скоро</string>
+    <string name="daytime_weather">Дневная погода</string>
+    <string name="bt_city">||||</string>
 </resources>

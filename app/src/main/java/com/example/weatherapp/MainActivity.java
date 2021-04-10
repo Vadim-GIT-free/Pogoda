@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,16 +23,20 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private WeatherFragment mWeatherFragment ;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private OnTouchSwipe mOnTouchSwipe;
+    private Button bt_city_reng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wather_activity);
         Toolbar toolbar = findViewById(R.id.toolbar2);
+        bt_city_reng = findViewById(R.id.nextcity);
         setSupportActionBar(toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorBlue, R.color.colorYellow,
                 R.color.colorGreen, R.color.colorRed);
+        init();
 
 
         if (savedInstanceState == null) {
@@ -39,6 +45,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     .commit();
         }
     }
+
+    private void init() {
+       // mOnTouchSwipe = new OnTouchSwipe(this);
+    }
+    public void OnClickreng(View view){
+        Intent intent = new Intent(this, RefreshActivity.class);
+        startActivity(intent);
+
+    }
+
     @Override
     public void onAttachFragment(@NonNull Fragment fragment) {
         if (fragment instanceof WeatherFragment) {
@@ -98,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefreshComplete() {
-        Toast.makeText(MainActivity.this, R.string.refresh_stop, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, R.string.refresh_stop, Toast.LENGTH_LONG).show();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 }

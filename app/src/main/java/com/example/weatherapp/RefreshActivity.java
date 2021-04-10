@@ -1,10 +1,13 @@
 package com.example.weatherapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,13 +22,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class RefreshActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, WeatherFragment.OnRefreshListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private WeatherFragment mWeatherFragment;
-
-
+    private Button btOnClickLeft;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        btOnClickLeft = findViewById(R.id.nextcity2);
         setSupportActionBar(toolbar);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -37,6 +40,10 @@ public class RefreshActivity extends AppCompatActivity implements SwipeRefreshLa
                     .commit();
         }
 
+    }
+    public void setBtOnClickLeft(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override

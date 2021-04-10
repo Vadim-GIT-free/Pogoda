@@ -35,6 +35,11 @@ public class WeatherFragment extends Fragment {
     TextView mHumidity;
     TextView mSpeed;
     TextView mDirection;
+    TextView day1;
+    TextView day2;
+    TextView day3;
+    TextView day4;
+    TextView day5;
     ImageView weather_icon_image;
 
 
@@ -62,6 +67,11 @@ public class WeatherFragment extends Fragment {
         mHumidity = (TextView) rootView.findViewById(R.id.text_humidity);
         mSpeed = (TextView) rootView.findViewById(R.id.text_speed);
         mDirection = (TextView) rootView.findViewById(R.id.text_direction);
+        day1 = (TextView) rootView.findViewById(R.id.textOneDay);
+        day2 = (TextView) rootView.findViewById(R.id.textTwoDay);
+        day3 = (TextView) rootView.findViewById(R.id.textThreDay);
+        day4 = (TextView) rootView.findViewById(R.id.text4Day);
+        day5 = (TextView) rootView.findViewById(R.id.text5Day);
         weather_icon_image = (ImageView) rootView.findViewById(R.id.imageIcon);
         sensation_temperature = (TextView) rootView.findViewById(R.id.sensation_temperature_field);
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
@@ -74,6 +84,7 @@ public class WeatherFragment extends Fragment {
     public void onResume() {
         mSelectedCity = new CityPreference(getActivity()).getCity();
         updateWeatherData();
+        updateWeatherDay();
         super.onResume();
     }
 
@@ -101,6 +112,31 @@ public class WeatherFragment extends Fragment {
                             if (mRefreshListener != null) {
                                 mRefreshListener.onRefreshComplete();
                             }
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+    private void updateWeatherDay(){
+        if (mRefreshListener != null) {
+            mRefreshListener.onRefreshStarted();
+        }
+        new Thread(){
+            public void run(){
+                final JSONObject json = OpenWeatherDay.getJSON(getActivity(), mSelectedCity);
+                if(json == null){
+                    handler.post(new Runnable(){
+                        public void run(){
+                            Toast.makeText(getActivity(),
+                                    getActivity().getString(R.string.place_not_found),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable(){
+                        public void run(){
+                            visualizeWeatherDays(json);
                         }
                     });
                 }
@@ -209,6 +245,13 @@ public class WeatherFragment extends Fragment {
             }
         }
         weather_icon_image.setImageResource(id);
+    }
+    private void visualizeWeatherDays(JSONObject json) {
+        try {
+
+        } catch (Exception e) {
+            Log.e(TAG, "One or more fields not found in the JSON data");
+        }
     }
 
     public void changeCity(String city) {
